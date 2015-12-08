@@ -331,8 +331,11 @@ public:
 	virtual void LineTo(int x_, int y_)=0;
 	virtual void Polygon(Point *pts, int npts, ColourDesired fore, ColourDesired back)=0;
 	virtual void RectangleDraw(PRectangle rc, ColourDesired fore, ColourDesired back)=0;
+
+	virtual void FillAlphaRectangle(PRectangle rc, ColourDesired back, int alpha)=0;
+
 	virtual void FillRectangle(PRectangle rc, ColourDesired back)=0;
- virtual  void FillRealRectangle(PRectangle rc, ColourDesired back)=0;
+  virtual  void FillRealRectangle(PRectangle rc, ColourDesired back)=0;
 	virtual void FillRectangle(PRectangle rc, Surface &surfacePattern)=0;
 	virtual void RoundedRectangle(PRectangle rc, ColourDesired fore, ColourDesired back)=0;
 	virtual void AlphaRectangle(PRectangle rc, int cornerSize, ColourDesired fill, int alphaFill,

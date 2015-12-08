@@ -17,7 +17,7 @@
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
-
+#include <iostream>
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
@@ -185,6 +185,7 @@ public:
     void RectangleDraw(PRectangle rc, ColourDesired fore,
             ColourDesired back);
     void FillRectangle(PRectangle rc, ColourDesired back);
+    void FillAlphaRectangle(PRectangle rc, ColourDesired back, int alpha);
     void FillRealRectangle(PRectangle rc, ColourDesired back);
     void FillRectangle(PRectangle rc, Surface &surfacePattern);
     void RoundedRectangle(PRectangle rc, ColourDesired fore,
@@ -387,16 +388,16 @@ void SurfaceImpl::FillRealRectangle(PRectangle rc, ColourDesired back){
   drawRect(rc);
 }
 
-void SurfaceImpl::FillRectangle(PRectangle rc, ColourDesired back)
+void SurfaceImpl::FillAlphaRectangle(PRectangle rc, ColourDesired back, int alpha)
 {
     Q_ASSERT(painter);
-    int alphaSetting = alphaLevel;
+    std::cout << "FillAlpha: " << (int)alpha << "\n"; 
     
-    QColor c = convertQColor(back, alphaSetting);
+    QColor c = convertQColor(back, alpha);
     painter->setPen(Qt::transparent);
     painter->setBrush(c);
 
-    if(alphaSetting > 0){
+    if(alpha > 0){
       painter->setCompositionMode( QPainter::CompositionMode_Clear );
       painter->fillRect(QRectF(rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top), Qt::transparent);
       painter->setCompositionMode( QPainter::CompositionMode_SourceOver );
@@ -404,6 +405,22 @@ void SurfaceImpl::FillRectangle(PRectangle rc, ColourDesired back)
     else{
       painter->fillRect(QRectF(rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top), c);
     }
+
+    drawRect(rc);
+}
+
+
+void SurfaceImpl::FillRectangle(PRectangle rc, ColourDesired back)
+{
+    Q_ASSERT(painter);    
+    int alphaLevel = 30;
+    QColor c = convertQColor(back, alphaLevel);
+    painter->setPen(Qt::transparent);
+    painter->setBrush(c);
+
+    painter->setCompositionMode( QPainter::CompositionMode_Clear );
+    painter->fillRect(QRectF(rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top), Qt::transparent);
+    painter->setCompositionMode( QPainter::CompositionMode_SourceOver );
 
     drawRect(rc);
 }

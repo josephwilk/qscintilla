@@ -5,6 +5,7 @@
 // Copyright 1998-2011 by Neil Hodgson <neilh@scintilla.org>
 // The License.txt file describes the conditions under which this software may be distributed.
 
+#include <iostream>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -1613,9 +1614,7 @@ void Editor::RefreshPixMaps(Surface *surfaceWindow) {
 
 void Editor::Paint(Surface *surfaceWindow, PRectangle rcArea) {
 	//Platform::DebugPrintf("Paint:%1d (%3d,%3d) ... (%3d,%3d)\n",
-	//	paintingAllText, rcArea.left, rcArea.top, rcArea.right, rcArea.bottom);
-  surfaceWindow->setAlphaLevel(vs.alphaLevel);
-	
+	//	paintingAllText, rcArea.left, rcArea.top, rcArea.right, rcArea.bottom);	
   AllocateGraphics();
 
 	RefreshStyleData();
@@ -1656,14 +1655,14 @@ void Editor::Paint(Surface *surfaceWindow, PRectangle rcArea) {
 			PRectangle rcRightMargin = rcClient;
 			rcRightMargin.left = rcRightMargin.right - vs.rightMarginWidth;
 			if (rcArea.Intersects(rcRightMargin)) {
-				surfaceWindow->FillRectangle(rcRightMargin, vs.styles[STYLE_DEFAULT].back);
+				surfaceWindow->FillAlphaRectangle(rcRightMargin, vs.styles[STYLE_DEFAULT].back, vs.alphaLevel);
 			}
 		} else { // Else separate view so separate paint event but leftMargin included to allow overlap
 			PRectangle rcLeftMargin = rcArea;
 			rcLeftMargin.left = 0;
 			rcLeftMargin.right = rcLeftMargin.left + vs.leftMarginWidth;
 			if (rcArea.Intersects(rcLeftMargin)) {
-				surfaceWindow->FillRectangle(rcLeftMargin, vs.styles[STYLE_DEFAULT].back);
+				surfaceWindow->FillAlphaRectangle(rcLeftMargin, vs.styles[STYLE_DEFAULT].back, vs.alphaLevel);
 			}
 		}
 	}
@@ -5360,7 +5359,8 @@ sptr_t Editor::WndProc(unsigned int iMessage, uptr_t wParam, sptr_t lParam) {
     
     case SCI_ALPHALEVEL:{
   		view.printParameters.alphaLevel = static_cast<int>(wParam);
-  		break;
+      vs.alphaLevel = static_cast<int>(wParam);
+  		return vs.alphaLevel;
     }
 
 	case SCI_SETTEXT: {

@@ -327,14 +327,14 @@ void EditView::RefreshPixMaps(Surface *surfaceWindow, WindowID wid, const ViewSt
 		pixmapIndentGuide->InitPixMap(1, vsDraw.lineHeight + 1, surfaceWindow, wid);
 		pixmapIndentGuideHighlight->InitPixMap(1, vsDraw.lineHeight + 1, surfaceWindow, wid);
 		PRectangle rcIG = PRectangle::FromInts(0, 0, 1, vsDraw.lineHeight);
-		pixmapIndentGuide->FillRectangle(rcIG, vsDraw.styles[STYLE_INDENTGUIDE].back);
+		pixmapIndentGuide->FillAlphaRectangle(rcIG, vsDraw.styles[STYLE_INDENTGUIDE].back, vsDraw.alphaLevel);
 		pixmapIndentGuide->PenColour(vsDraw.styles[STYLE_INDENTGUIDE].fore);
-		pixmapIndentGuideHighlight->FillRectangle(rcIG, vsDraw.styles[STYLE_BRACELIGHT].back);
+		pixmapIndentGuideHighlight->FillAlphaRectangle(rcIG, vsDraw.styles[STYLE_BRACELIGHT].back,vsDraw.alphaLevel);
 		pixmapIndentGuideHighlight->PenColour(vsDraw.styles[STYLE_BRACELIGHT].fore);
 		for (int stripe = 1; stripe < vsDraw.lineHeight + 1; stripe += 2) {
 			PRectangle rcPixel = PRectangle::FromInts(0, stripe, 1, stripe + 1);
-			pixmapIndentGuide->FillRectangle(rcPixel, vsDraw.styles[STYLE_INDENTGUIDE].fore);
-			pixmapIndentGuideHighlight->FillRectangle(rcPixel, vsDraw.styles[STYLE_BRACELIGHT].fore);
+			pixmapIndentGuide->FillAlphaRectangle(rcPixel, vsDraw.styles[STYLE_INDENTGUIDE].fore, vsDraw.alphaLevel);
+			pixmapIndentGuideHighlight->FillAlphaRectangle(rcPixel, vsDraw.styles[STYLE_BRACELIGHT].fore,vsDraw.alphaLevel);
 		}
 	}
 }
@@ -757,7 +757,7 @@ static void SimpleAlphaRectangle(Surface *surface, PRectangle rc, ColourDesired 
 static void DrawTextBlob(Surface *surface, const ViewStyle &vsDraw, PRectangle rcSegment,
 	const char *s, ColourDesired textBack, ColourDesired textFore, bool fillBackground) {
 	if (fillBackground) {
-		surface->FillRectangle(rcSegment, textBack);
+		surface->FillAlphaRectangle(rcSegment, textBack, vsDraw.alphaLevel);
 	}
 	FontAlias ctrlCharsFont = vsDraw.styles[STYLE_CONTROLCHAR].font;
 	int normalCharHeight = static_cast<int>(surface->Ascent(ctrlCharsFont) -
@@ -769,7 +769,7 @@ static void DrawTextBlob(Surface *surface, const ViewStyle &vsDraw, PRectangle r
 	PRectangle rcCentral = rcCChar;
 	rcCentral.top++;
 	rcCentral.bottom--;
-	surface->FillRectangle(rcCentral, textFore);
+	surface->FillAlphaRectangle(rcCentral, textFore,vsDraw.alphaLevel);
 	PRectangle rcChar = rcCChar;
 	rcChar.left++;
 	rcChar.right--;
@@ -797,7 +797,7 @@ void EditView::DrawEOL(Surface *surface, const EditModel &model, const ViewStyle
 	if (virtualSpace > 0.0f) {
 		rcSegment.left = xEol + xStart;
 		rcSegment.right = xEol + xStart + virtualSpace;
-		surface->FillRectangle(rcSegment, background.isSet ? background : vsDraw.styles[ll->styles[ll->numCharsInLine]].back);
+		surface->FillAlphaRectangle(rcSegment, background.isSet ? background : vsDraw.styles[ll->styles[ll->numCharsInLine]].back, vsDraw.alphaLevel);
 		if (!hideSelection && ((vsDraw.selAlpha == SC_ALPHA_NOALPHA) || (vsDraw.selAdditionalAlpha == SC_ALPHA_NOALPHA))) {
 			SelectionSegment virtualSpaceRange(SelectionPosition(model.pdoc->LineEnd(line)), SelectionPosition(model.pdoc->LineEnd(line), model.sel.VirtualSpaceFor(model.pdoc->LineEnd(line))));
 			for (size_t r = 0; r<model.sel.Count(); r++) {
