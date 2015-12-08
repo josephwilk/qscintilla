@@ -31,7 +31,7 @@
 
 // The ctor.
 QsciPrinter::QsciPrinter(QPrinter::PrinterMode mode)
-    : QPrinter(mode), mag(0), wrap(QsciScintilla::WrapWord)
+    : QPrinter(mode), mag(0), wrap(QsciScintilla::WrapWord), alphaLevel(0)
 {
 }
 
@@ -182,5 +182,11 @@ void QsciPrinter::setWrapMode(QsciScintilla::WrapMode wmode)
 {
     wrap = wmode;
 }
+
+void QsciPrinter::setAlphaLevel(int level)
+{
+    alphaLevel = level;
+}
+
 
 #endif

@@ -955,6 +955,9 @@ public:
 
         //!
         SCI_SETWRAPMODE = 2268,
+        
+        //!
+        SCI_ALPHALEVEL = 111080,
 
         //!
         SCI_GETWRAPMODE = 2269,

@@ -1879,6 +1879,8 @@ public slots:
     //! \sa wrapMode()
     virtual void setWrapMode(WrapMode mode);
 
+    virtual void setAlphaLevel(int mode);
+
     //! Undo the last change or sequence of changes.
     //!
     //! Scintilla has multiple level undo and redo.  It will continue to record

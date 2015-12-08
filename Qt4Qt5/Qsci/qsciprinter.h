@@ -103,8 +103,11 @@ public:
     //! \sa wrapMode()
     virtual void setWrapMode(QsciScintilla::WrapMode wmode);
 
+    virtual void setAlphaLevel(int level);
+
 private:
     int mag;
+    int alphaLevel;
     QsciScintilla::WrapMode wrap;
 
     QsciPrinter(const QsciPrinter &);

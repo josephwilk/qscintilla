@@ -596,6 +596,7 @@ void QsciScintillaQt::paintEvent(QPaintEvent *e)
 
     sw->Init(&painter);
     sw->SetUnicodeMode(CodePage() == SC_CP_UTF8);
+
     Paint(sw, rcPaint);
 
     delete sw;
