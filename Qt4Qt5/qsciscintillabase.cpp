@@ -109,7 +109,7 @@ QsciScintillaBase::QsciScintillaBase(QWidget *parent)
 
     viewport()->setBackgroundRole(QPalette::Base);
     viewport()->setMouseTracking(true);
-
+    
     //viewport()->setAttribute(Qt::WA_NoSystemBackground);
     //viewport()->setAutoFillBackground(false);
     //viewport()->setAttribute(Qt::WA_OpaquePaintEvent);     

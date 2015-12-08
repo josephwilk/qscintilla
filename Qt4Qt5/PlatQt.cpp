@@ -236,6 +236,7 @@ private:
     QPainter *painter;
     bool my_resources;
     int pen_x, pen_y;
+    int alphaLevel = 0;
 };
 
 Surface *Surface::Allocate(int)
@@ -383,7 +384,7 @@ void SurfaceImpl::FillRealRectangle(PRectangle rc, ColourDesired back){
 void SurfaceImpl::FillRectangle(PRectangle rc, ColourDesired back)
 {
     Q_ASSERT(painter);
-    int alphaSetting = 30;
+    int alphaSetting = this->alphaLevel;
     
     QColor c = convertQColor(back);
     c.setAlpha(alphaSetting);

@@ -15,6 +15,7 @@ namespace Scintilla {
 struct PrintParameters {
 	int magnification;
 	int colourMode;
+  int alphaLevel;
 	WrapMode wrapState;
 	PrintParameters();
 };

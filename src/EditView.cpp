@@ -61,6 +61,7 @@ PrintParameters::PrintParameters() {
 	magnification = 0;
 	colourMode = SC_PRINT_NORMAL;
 	wrapState = eWrapWord;
+  alphaLevel = 0;
 }
 
 #ifdef SCI_NAMESPACE

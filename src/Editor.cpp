@@ -5355,6 +5355,11 @@ sptr_t Editor::WndProc(unsigned int iMessage, uptr_t wParam, sptr_t lParam) {
 			ptr[iChar] = '\0';
 			return iChar;
 		}
+    
+    case SCI_ALPHALEVEL:{
+  		view.printParameters.alphaLevel = static_cast<int>(wParam);
+  		break;
+    }
 
 	case SCI_SETTEXT: {
 			if (lParam == 0)

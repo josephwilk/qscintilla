@@ -97,7 +97,8 @@ public:
 	ColourDesired selAdditionalForeground;
 	ColourDesired selAdditionalBackground;
 	ColourDesired selBackground2;
-	int selAlpha;
+	int alphaLevel;
+  int selAlpha;
 	int selAdditionalAlpha;
 	bool selEOLFilled;
 	ForeBackColours whitespaceColours;
