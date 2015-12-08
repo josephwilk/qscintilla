@@ -390,9 +390,14 @@ void SurfaceImpl::FillRectangle(PRectangle rc, ColourDesired back)
     painter->setPen(Qt::transparent);
     painter->setBrush(c);
 
-    painter->setCompositionMode( QPainter::CompositionMode_Clear );
-    painter->fillRect(QRectF(rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top), Qt::transparent);
-    painter->setCompositionMode( QPainter::CompositionMode_SourceOver );
+    if(alphaSetting > 0){
+      painter->setCompositionMode( QPainter::CompositionMode_Clear );
+      painter->fillRect(QRectF(rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top), Qt::transparent);
+      painter->setCompositionMode( QPainter::CompositionMode_SourceOver );
+    }
+    else{
+      painter->fillRect(QRectF(rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top), c);
+    }
 
     drawRect(rc);
 }
