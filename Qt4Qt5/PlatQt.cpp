@@ -384,10 +384,9 @@ void SurfaceImpl::FillRealRectangle(PRectangle rc, ColourDesired back){
 void SurfaceImpl::FillRectangle(PRectangle rc, ColourDesired back)
 {
     Q_ASSERT(painter);
-    int alphaSetting = this->alphaLevel;
+    int alphaSetting = 30;
     
-    QColor c = convertQColor(back);
-    c.setAlpha(alphaSetting);
+    QColor c = convertQColor(back, alphaSetting);
     painter->setPen(Qt::transparent);
     painter->setBrush(c);
 
