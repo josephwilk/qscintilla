@@ -220,6 +220,8 @@ public:
     void SetDBCSMode(int codePage) {}
 
     void DrawXPM(PRectangle rc, const XPM *xpm);
+    
+    void setAlphaLevel(int level);
 
 private:
     void drawRect(const PRectangle &rc);
@@ -281,6 +283,10 @@ void SurfaceImpl::Init(QPainter *p)
 
     pd = p->device();
     painter = p;
+}
+
+void SurfaceImpl::setAlphaLevel(int level){
+  alphaLevel = level;
 }
 
 void SurfaceImpl::InitPixMap(int width, int height, Surface *, WindowID wid)
@@ -384,7 +390,7 @@ void SurfaceImpl::FillRealRectangle(PRectangle rc, ColourDesired back){
 void SurfaceImpl::FillRectangle(PRectangle rc, ColourDesired back)
 {
     Q_ASSERT(painter);
-    int alphaSetting = 30;
+    int alphaSetting = alphaLevel;
     
     QColor c = convertQColor(back, alphaSetting);
     painter->setPen(Qt::transparent);

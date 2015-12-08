@@ -359,6 +359,8 @@ public:
 
 	virtual void SetUnicodeMode(bool unicodeMode_)=0;
 	virtual void SetDBCSMode(int codePage)=0;
+  
+  virtual void setAlphaLevel(int level)=0;
 
 #if defined(PLAT_QT)
     virtual void Init(QPainter *p)=0;

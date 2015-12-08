@@ -1614,7 +1614,9 @@ void Editor::RefreshPixMaps(Surface *surfaceWindow) {
 void Editor::Paint(Surface *surfaceWindow, PRectangle rcArea) {
 	//Platform::DebugPrintf("Paint:%1d (%3d,%3d) ... (%3d,%3d)\n",
 	//	paintingAllText, rcArea.left, rcArea.top, rcArea.right, rcArea.bottom);
-	AllocateGraphics();
+  surfaceWindow->setAlphaLevel(vs.alphaLevel);
+	
+  AllocateGraphics();
 
 	RefreshStyleData();
 	if (paintState == paintAbandoned)
@@ -1644,7 +1646,7 @@ void Editor::Paint(Surface *surfaceWindow, PRectangle rcArea) {
 		RefreshPixMaps(surfaceWindow);	// In case pixmaps invalidated by scrollbar change
 	}
 	PLATFORM_ASSERT(marginView.pixmapSelPattern->Initialised());
-
+  
 	if (!view.bufferedDraw)
 		surfaceWindow->SetClip(rcArea);
 
