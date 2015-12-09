@@ -392,7 +392,7 @@ void MarginView::PaintMargin(Surface *surface, int topLine, PRectangle rc, PRect
 						XYPOSITION width = surface->WidthText(fontLineNumber, number, static_cast<int>(strlen(number)));
 						XYPOSITION xpos = rcNumber.right - width - vs.marginNumberPadding;
 						rcNumber.left = xpos;
-						DrawTextNoClipPhase(surface, rcNumber, vs.styles[STYLE_LINENUMBER],
+						DrawTextNoClipPhase(surface, rcNumber, vs.styles[STYLE_LINENUMBER],vs,
 							rcNumber.top + vs.maxAscent, number, static_cast<int>(strlen(number)), drawAll);
 					} else if (vs.wrapVisualFlags & SC_WRAPVISUALFLAG_MARGIN) {
 						PRectangle rcWrapMarker = rcMarker;

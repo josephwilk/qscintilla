@@ -118,7 +118,7 @@ int WidestLineWidth(Surface *surface, const ViewStyle &vs, int styleOffset, cons
 	return widthMax;
 }
 
-void DrawTextNoClipPhase(Surface *surface, PRectangle rc, const Style &style, XYPOSITION ybase,
+void DrawTextNoClipPhase(Surface *surface, PRectangle rc, const Style &style, const ViewStyle &vsDraw, XYPOSITION ybase,
 	const char *s, int len, DrawPhase phase) {
 	FontAlias fontText = style.font;
 	if (phase & drawBack) {
@@ -127,7 +127,7 @@ void DrawTextNoClipPhase(Surface *surface, PRectangle rc, const Style &style, XY
 			surface->DrawTextNoClip(rc, fontText, ybase, s, len,
 				style.fore, style.back);
 		} else {
-			surface->FillRectangle(rc, style.back);
+			surface->FillAlphaRectangle(rc, style.back, vsDraw.alphaLevel);
 		}
 	} else if (phase & drawText) {
 		surface->DrawTextTransparent(rc, fontText, ybase, s, len, style.fore);
@@ -152,7 +152,7 @@ void DrawStyledText(Surface *surface, const ViewStyle &vs, int styleOffset, PRec
 			PRectangle rcSegment = rcText;
 			rcSegment.left = static_cast<XYPOSITION>(x);
 			rcSegment.right = static_cast<XYPOSITION>(x + width + 1);
-			DrawTextNoClipPhase(surface, rcSegment, vs.styles[style],
+			DrawTextNoClipPhase(surface, rcSegment, vs.styles[style],vs,
 				rcText.top + vs.maxAscent, st.text + start + i,
 				static_cast<int>(end - i + 1), phase);
 			x += width;
@@ -160,7 +160,7 @@ void DrawStyledText(Surface *surface, const ViewStyle &vs, int styleOffset, PRec
 		}
 	} else {
 		const size_t style = st.style + styleOffset;
-		DrawTextNoClipPhase(surface, rcText, vs.styles[style],
+		DrawTextNoClipPhase(surface, rcText, vs.styles[style],vs,
 			rcText.top + vs.maxAscent, st.text + start,
 			static_cast<int>(length), phase);
 	}
