@@ -204,8 +204,8 @@ void MarginView::PaintMargin(Surface *surface, int topLine, PRectangle rc, PRect
 					// Ensure patterns line up when scrolling with separate margin view
 					// by choosing correctly aligned variant.
 					bool invertPhase = static_cast<int>(ptOrigin.y) & 1;
-					surface->FillAlphaRectangle(rcSelMargin,
-						invertPhase ? *pixmapSelPattern : *pixmapSelPatternOffset1, vs.alphaLevel);
+					surface->FillRectangle(rcSelMargin,
+						invertPhase ? *pixmapSelPattern : *pixmapSelPatternOffset1);
 				} else {
 					ColourDesired colour;
 					switch (vs.ms[margin].style) {
@@ -461,7 +461,7 @@ void MarginView::PaintMargin(Surface *surface, int topLine, PRectangle rc, PRect
 
 	PRectangle rcBlankMargin = rcMargin;
 	rcBlankMargin.left = rcSelMargin.right;
-	surface->FillAlphaRectangle(rcBlankMargin, vs.styles[STYLE_DEFAULT].back, vsDraw.alphaLevel);
+	surface->FillAlphaRectangle(rcBlankMargin, vs.styles[STYLE_DEFAULT].back, vs.alphaLevel);
 }
 
 #ifdef SCI_NAMESPACE
