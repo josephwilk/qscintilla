@@ -1,6 +1,6 @@
 // This is the SIP interface definition for QsciLexerHTML.
 //
-// Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2017 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -150,6 +150,9 @@ public:
     const char *keywords(int set) const;
     QString description(int style) const;
     const char *wordCharacters() const;
+
+    const char *autoCompletionFillups() const /Encoding="None"/;
+    bool caseSensitive() const;
 
     void refreshProperties();
     bool caseSensitiveTags() const;

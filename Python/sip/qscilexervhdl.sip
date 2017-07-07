@@ -1,6 +1,6 @@
 // This is the SIP interface definition for QsciLexerVHDL.
 //
-// Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2017 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -55,6 +55,8 @@ public:
     QColor defaultPaper(int style) const;
     const char *keywords(int set) const;
     QString description(int style) const;
+
+    int braceStyle() const;
 
     void refreshProperties();
     bool foldComments() const;

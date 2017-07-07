@@ -1,6 +1,6 @@
 // This is the SIP interface definition for QsciLexer.
 //
-// Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2017 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -32,10 +32,19 @@ public:
     virtual const char *lexer() const;
     virtual int lexerId() const;
     QsciAbstractAPIs *apis() const;
+    virtual const char *autoCompletionFillups() const /Encoding="None"/;
+    virtual QStringList autoCompletionWordSeparators() const;
     int autoIndentStyle();
+    virtual const char *blockEnd(int *style = 0) const /Encoding="None"/;
+    virtual int blockLookback() const;
+    virtual const char *blockStart(int *style = 0) const /Encoding="None"/;
+    virtual const char *blockStartKeyword(int *style = 0) const /Encoding="None"/;
+    virtual int braceStyle() const;
+    virtual bool caseSensitive() const;
     virtual QColor color(int style) const;
     virtual bool eolFill(int style) const;
     virtual QFont font(int style) const;
+    virtual int indentationGuideView() const;
     virtual const char *keywords(int set) const;
     virtual QString description(int style) const = 0;
     virtual QColor paper(int style) const;
@@ -46,6 +55,7 @@ public:
     virtual QFont defaultFont(int style) const;
     QColor defaultPaper() const;
     virtual QColor defaultPaper(int style) const;
+    virtual int defaultStyle() const;
     QsciScintilla *editor() const;
     virtual void refreshProperties();
     void setAPIs(QsciAbstractAPIs *apis);

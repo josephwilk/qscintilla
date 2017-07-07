@@ -1,6 +1,6 @@
 // This is the SIP interface definition for QsciScintillaBase.
 //
-// Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2017 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -501,8 +501,6 @@ public:
         SCI_DELWORDRIGHTEND,
         SCI_COPYALLOWLINE,
         SCI_GETCHARACTERPOINTER,
-        SCI_SETKEYSUNICODE,
-        SCI_GETKEYSUNICODE,
         SCI_INDICSETALPHA,
         SCI_INDICGETALPHA,
         SCI_SETEXTRAASCENT,
@@ -679,7 +677,7 @@ public:
         SCI_INDICSETFLAGS,
         SCI_INDICGETFLAGS,
         SCI_SETTARGETRANGE,
-        SCI_GETTARGETRANGE,
+        SCI_GETTARGETTEXT,
         SCI_RELEASEALLEXTENDEDSTYLES,
         SCI_ALLOCATEEXTENDEDSTYLES,
         SCI_SETMOUSESELECTIONRECTANGULARSWITCH,
@@ -702,6 +700,33 @@ public:
         SCI_SETIDENTIFIERS,
         SCI_DISTANCETOSECONDARYSTYLES,
         SCI_GETSUBSTYLEBASES,
+
+        SCI_SETIDLESTYLING,
+        SCI_GETIDLESTYLING,
+        SCI_SETMARGINBACKN,
+        SCI_GETMARGINBACKN,
+        SCI_SETMARGINS,
+        SCI_GETMARGINS,
+        SCI_SETMOUSEWHEELCAPTURES,
+        SCI_GETMOUSEWHEELCAPTURES,
+        SCI_GETTABDRAWMODE,
+        SCI_SETTABDRAWMODE,
+        SCI_ISRANGEWORD,
+        SCI_TARGETWHOLEDOCUMENT,
+        SCI_FOLDDISPLAYTEXTSETSTYLE,
+        SCI_TOGGLEFOLDSHOWTEXT,
+        SCI_MULTIEDGEADDLINE,
+        SCI_MULTIEDGECLEARALL,
+        SCI_MULTIPLESELECTADDNEXT,
+        SCI_MULTIPLESELECTADDEACH,
+    };
+
+    enum {
+        SC_AC_FILLUP,
+        SC_AC_DOUBLECLICK,
+        SC_AC_TAB,
+        SC_AC_NEWLINE,
+        SC_AC_COMMAND,
     };
 
     enum {
@@ -725,6 +750,13 @@ public:
     };
 
     enum {
+        SC_IDLESTYLING_NONE,
+        SC_IDLESTYLING_TOVISIBLE,
+        SC_IDLESTYLING_AFTERVISIBLE,
+        SC_IDLESTYLING_ALL,
+    };
+
+    enum {
         SC_IME_WINDOWED,
         SC_IME_INLINE,
     };
@@ -742,6 +774,12 @@ public:
     enum {
         SC_MULTIPASTE_ONCE,
         SC_MULTIPASTE_EACH,
+    };
+
+    enum {
+        SC_POPUP_NEVER,
+        SC_POPUP_ALL,
+        SC_POPUP_TEXT,
     };
 
     enum {
@@ -786,15 +824,22 @@ public:
     };
 
     enum {
+        SCTD_LONGARROW,
+        SCTD_STRIKEOUT,
+    };
+
+    enum {
         SCVS_NONE,
         SCVS_RECTANGULARSELECTION,
         SCVS_USERACCESSIBLE,
+        SCVS_NOWRAPLINESTART,
     };
 
     enum {
         SCWS_INVISIBLE,
         SCWS_VISIBLEALWAYS,
-        SCWS_VISIBLEAFTERINDENT
+        SCWS_VISIBLEAFTERINDENT,
+        SCWS_VISIBLEONLYININDENT,
     };
 
     enum {
@@ -862,6 +907,7 @@ public:
         SC_MARGIN_FORE,
         SC_MARGIN_TEXT,
         SC_MARGIN_RTEXT,
+        SC_MARGIN_COLOUR,
     };
 
     enum {
@@ -872,6 +918,7 @@ public:
         STYLE_CONTROLCHAR,
         STYLE_INDENTGUIDE,
         STYLE_CALLTIP,
+        STYLE_FOLDDISPLAYTEXT,
         STYLE_LASTPREDEFINED,
         STYLE_MAX
     };
@@ -888,6 +935,8 @@ public:
         SC_CHARSET_MAC,
         SC_CHARSET_OEM,
         SC_CHARSET_RUSSIAN,
+        SC_CHARSET_OEM866,
+        SC_CHARSET_CYRILLIC,
         SC_CHARSET_SHIFTJIS,
         SC_CHARSET_SYMBOL,
         SC_CHARSET_TURKISH,
@@ -902,7 +951,8 @@ public:
     enum {
         SC_CASE_MIXED,
         SC_CASE_UPPER,
-        SC_CASE_LOWER
+        SC_CASE_LOWER,
+        SC_CASE_CAMEL,
     };
 
     enum
@@ -932,6 +982,8 @@ public:
         INDIC_COMPOSITIONTHIN,
         INDIC_FULLBOX,
         INDIC_TEXTFORE,
+        INDIC_POINT,
+        INDIC_POINTCHARACTER,
 
         INDIC_IME,
         INDIC_IME_MAX,
@@ -963,6 +1015,12 @@ public:
         SCFIND_REGEXP,
         SCFIND_POSIX,
         SCFIND_CXX11REGEX,
+    };
+
+    enum {
+        SC_FOLDDISPLAYTEXT_HIDDEN,
+        SC_FOLDDISPLAYTEXT_STANDARD,
+        SC_FOLDDISPLAYTEXT_BOXED,
     };
 
     enum {
@@ -1026,7 +1084,8 @@ public:
     enum {
         EDGE_NONE,
         EDGE_LINE,
-        EDGE_BACKGROUND
+        EDGE_BACKGROUND,
+        EDGE_MULTILINE,
     };
 
     enum {
@@ -1237,6 +1296,8 @@ public:
         SCLEX_SREC,
         SCLEX_IHEX,
         SCLEX_TEHEX,
+        SCLEX_JSON,
+        SCLEX_EDIFACT,
     };
 
     enum {
@@ -1291,49 +1352,51 @@ static struct class_graph {
     sipTypeDef **type;
     int yes, no;
 } graph[] = {
-    {sipName_QsciScintillaBase, &sipType_QsciScintillaBase, 4, 1},
-    {sipName_QsciMacro, &sipType_QsciMacro, -1, 2},
-    {sipName_QsciLexer, &sipType_QsciLexer, 5, 3},
-    {sipName_QsciAbstractAPIs, &sipType_QsciAbstractAPIs, 42, -1},
-    {sipName_QsciScintilla, &sipType_QsciScintilla, -1, -1},
-    {sipName_QsciLexerPO, &sipType_QsciLexerPO, -1, 6},
-    {sipName_QsciLexerBash, &sipType_QsciLexerBash, -1, 7},
-    {sipName_QsciLexerPython, &sipType_QsciLexerPython, -1, 8},
-    {sipName_QsciLexerSQL, &sipType_QsciLexerSQL, -1, 9},
-    {sipName_QsciLexerPascal, &sipType_QsciLexerPascal, -1, 10},
-    {sipName_QsciLexerDiff, &sipType_QsciLexerDiff, -1, 11},
-    {sipName_QsciLexerCustom, &sipType_QsciLexerCustom, -1, 12},
+    {sipName_QsciLexer, &sipType_QsciLexer, 4, 1},
+    {sipName_QsciAbstractAPIs, &sipType_QsciAbstractAPIs, 43, 2},
+    {sipName_QsciMacro, &sipType_QsciMacro, -1, 3},
+    {sipName_QsciScintillaBase, &sipType_QsciScintillaBase, 44, -1},
+    {sipName_QsciLexerSQL, &sipType_QsciLexerSQL, -1, 5},
+    {sipName_QsciLexerMakefile, &sipType_QsciLexerMakefile, -1, 6},
+    {sipName_QsciLexerAVS, &sipType_QsciLexerAVS, -1, 7},
+    {sipName_QsciLexerDiff, &sipType_QsciLexerDiff, -1, 8},
+    {sipName_QsciLexerPython, &sipType_QsciLexerPython, -1, 9},
+    {sipName_QsciLexerPO, &sipType_QsciLexerPO, -1, 10},
+    {sipName_QsciLexerCoffeeScript, &sipType_QsciLexerCoffeeScript, -1, 11},
+    {sipName_QsciLexerPostScript, &sipType_QsciLexerPostScript, -1, 12},
     {sipName_QsciLexerPOV, &sipType_QsciLexerPOV, -1, 13},
-    {sipName_QsciLexerLua, &sipType_QsciLexerLua, -1, 14},
-    {sipName_QsciLexerSpice, &sipType_QsciLexerSpice, -1, 15},
-    {sipName_QsciLexerMatlab, &sipType_QsciLexerMatlab, 35, 16},
-    {sipName_QsciLexerCSS, &sipType_QsciLexerCSS, -1, 17},
+    {sipName_QsciLexerRuby, &sipType_QsciLexerRuby, -1, 14},
+    {sipName_QsciLexerJSON, &sipType_QsciLexerJSON, -1, 15},
+    {sipName_QsciLexerVerilog, &sipType_QsciLexerVerilog, -1, 16},
+    {sipName_QsciLexerProperties, &sipType_QsciLexerProperties, -1, 17},
     {sipName_QsciLexerCMake, &sipType_QsciLexerCMake, -1, 18},
-    {sipName_QsciLexerVHDL, &sipType_QsciLexerVHDL, -1, 19},
-    {sipName_QsciLexerVerilog, &sipType_QsciLexerVerilog, -1, 20},
-    {sipName_QsciLexerHTML, &sipType_QsciLexerHTML, 36, 21},
-    {sipName_QsciLexerMakefile, &sipType_QsciLexerMakefile, -1, 22},
-    {sipName_QsciLexerPostScript, &sipType_QsciLexerPostScript, -1, 23},
-    {sipName_QsciLexerTCL, &sipType_QsciLexerTCL, -1, 24},
-    {sipName_QsciLexerAVS, &sipType_QsciLexerAVS, -1, 25},
-    {sipName_QsciLexerPerl, &sipType_QsciLexerPerl, -1, 26},
-    {sipName_QsciLexerCoffeeScript, &sipType_QsciLexerCoffeeScript, -1, 27},
-    {sipName_QsciLexerFortran77, &sipType_QsciLexerFortran77, 37, 28},
-    {sipName_QsciLexerYAML, &sipType_QsciLexerYAML, -1, 29},
-    {sipName_QsciLexerRuby, &sipType_QsciLexerRuby, -1, 30},
-    {sipName_QsciLexerProperties, &sipType_QsciLexerProperties, -1, 31},
-    {sipName_QsciLexerTeX, &sipType_QsciLexerTeX, -1, 32},
-    {sipName_QsciLexerD, &sipType_QsciLexerD, -1, 33},
-    {sipName_QsciLexerCPP, &sipType_QsciLexerCPP, 38, 34},
-    {sipName_QsciLexerBatch, &sipType_QsciLexerBatch, -1, -1},
-    {sipName_QsciLexerOctave, &sipType_QsciLexerOctave, -1, -1},
-    {sipName_QsciLexerXML, &sipType_QsciLexerXML, -1, -1},
+    {sipName_QsciLexerD, &sipType_QsciLexerD, -1, 19},
+    {sipName_QsciLexerLua, &sipType_QsciLexerLua, -1, 20},
+    {sipName_QsciLexerPerl, &sipType_QsciLexerPerl, -1, 21},
+    {sipName_QsciLexerBash, &sipType_QsciLexerBash, -1, 22},
+    {sipName_QsciLexerFortran77, &sipType_QsciLexerFortran77, 36, 23},
+    {sipName_QsciLexerVHDL, &sipType_QsciLexerVHDL, -1, 24},
+    {sipName_QsciLexerCSS, &sipType_QsciLexerCSS, -1, 25},
+    {sipName_QsciLexerSpice, &sipType_QsciLexerSpice, -1, 26},
+    {sipName_QsciLexerBatch, &sipType_QsciLexerBatch, -1, 27},
+    {sipName_QsciLexerHTML, &sipType_QsciLexerHTML, 37, 28},
+    {sipName_QsciLexerCustom, &sipType_QsciLexerCustom, -1, 29},
+    {sipName_QsciLexerMatlab, &sipType_QsciLexerMatlab, 38, 30},
+    {sipName_QsciLexerPascal, &sipType_QsciLexerPascal, -1, 31},
+    {sipName_QsciLexerTCL, &sipType_QsciLexerTCL, -1, 32},
+    {sipName_QsciLexerMarkdown, &sipType_QsciLexerMarkdown, -1, 33},
+    {sipName_QsciLexerTeX, &sipType_QsciLexerTeX, -1, 34},
+    {sipName_QsciLexerCPP, &sipType_QsciLexerCPP, 39, 35},
+    {sipName_QsciLexerYAML, &sipType_QsciLexerYAML, -1, -1},
     {sipName_QsciLexerFortran, &sipType_QsciLexerFortran, -1, -1},
-    {sipName_QsciLexerJava, &sipType_QsciLexerJava, -1, 39},
+    {sipName_QsciLexerXML, &sipType_QsciLexerXML, -1, -1},
+    {sipName_QsciLexerOctave, &sipType_QsciLexerOctave, -1, -1},
     {sipName_QsciLexerCSharp, &sipType_QsciLexerCSharp, -1, 40},
-    {sipName_QsciLexerIDL, &sipType_QsciLexerIDL, -1, 41},
-    {sipName_QsciLexerJavaScript, &sipType_QsciLexerJavaScript, -1, -1},
+    {sipName_QsciLexerJavaScript, &sipType_QsciLexerJavaScript, -1, 41},
+    {sipName_QsciLexerIDL, &sipType_QsciLexerIDL, -1, 42},
+    {sipName_QsciLexerJava, &sipType_QsciLexerJava, -1, -1},
     {sipName_QsciAPIs, &sipType_QsciAPIs, -1, -1},
+    {sipName_QsciScintilla, &sipType_QsciScintilla, -1, -1},
 };
 
 int i = 0;
@@ -1357,21 +1420,24 @@ while (i >= 0);
 
     static QsciScintillaBase *pool();
 
+    void replaceHorizontalScrollBar(QScrollBar *scrollBar /Transfer/);
+    void replaceVerticalScrollBar(QScrollBar *scrollBar /Transfer/);
+
     long SendScintilla(unsigned int msg, unsigned long wParam = 0,
             long lParam = 0) const;
     long SendScintilla(unsigned int msg, unsigned long wParam,
             void *lParam) const;
     long SendScintilla(unsigned int msg, unsigned long wParam,
-            const char *lParam /DocType="Py_v3:bytes;str", Encoding="None"/) const;
+            const char *lParam /TypeHint="Py_v3:bytes;str", Encoding="None"/) const;
     long SendScintilla(unsigned int msg,
-            const char *lParam /DocType="Py_v3:bytes;str", Encoding="None"/); const
+            const char *lParam /TypeHint="Py_v3:bytes;str", Encoding="None"/); const
     long SendScintilla(unsigned int msg,
-            const char *wParam /DocType="Py_v3:bytes;str", Encoding="None"/,
-            const char *lParam /DocType="Py_v3:bytes;str", Encoding="None"/) const;
+            const char *wParam /TypeHint="Py_v3:bytes;str", Encoding="None"/,
+            const char *lParam /TypeHint="Py_v3:bytes;str", Encoding="None"/) const;
     long SendScintilla(unsigned int msg, long wParam) const;
     //long SendScintilla(unsigned int msg, int wParam) const;
     long SendScintilla(unsigned int msg, long cpMin, long cpMax,
-            char *lpstrText /DocType="Py_v3:bytes;str", Encoding="None"/) const;
+            char *lpstrText /TypeHint="Py_v3:bytes;str", Encoding="None"/) const;
     long SendScintilla(unsigned int msg, unsigned long wParam,
             const QColor &col) const;
     long SendScintilla(unsigned int msg, const QColor &col) const;
@@ -1391,6 +1457,8 @@ signals:
 
     void SCN_AUTOCCANCELLED();
     void SCN_AUTOCCHARDELETED();
+    void SCN_AUTOCCOMPLETED(const char *selection, int position, int ch, int method);
+    void SCN_AUTOCSELECTION(const char *selection, int position, int ch, int method);
     void SCN_AUTOCSELECTION(const char *selection, int position);
     void SCN_CALLTIPCLICK(int direction);
     void SCN_CHARADDED(int charadded);
@@ -1406,6 +1474,7 @@ signals:
     void SCN_INDICATORRELEASE(int position, int modifiers);
     void SCN_MACRORECORD(unsigned int, unsigned long, void *);
     void SCN_MARGINCLICK(int position, int modifiers, int margin);
+    void SCN_MARGINRIGHTCLICK(int position, int modifiers, int margin);
     void SCN_MODIFIED(int, int, const char *, int, int, int, int, int, int, int);
     void SCN_MODIFYATTEMPTRO();
     void SCN_NEEDSHOWN(int, int);
@@ -1414,6 +1483,7 @@ signals:
     void SCN_SAVEPOINTREACHED();
     void SCN_STYLENEEDED(int position);
     void SCN_UPDATEUI(int updated);
+    void SCN_USERLISTSELECTION(const char *, int, int, int);
     void SCN_USERLISTSELECTION(const char *, int);
     void SCN_ZOOM();
 

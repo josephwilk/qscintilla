@@ -1,6 +1,6 @@
 // This is the SIP interface definition for QsciScintilla.
 //
-// Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2017 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -72,7 +72,8 @@ public:
     enum EdgeMode {
         EdgeNone,
         EdgeLine,
-        EdgeBackground
+        EdgeBackground,
+        EdgeMultipleLines,
     };
 
     enum EolMode {
@@ -109,6 +110,8 @@ public:
         ThickCompositionIndicator,
         ThinCompositionIndicator,
         TextColorIndicator,
+        TriangleIndicator,
+        TriangleCharacterIndicator,
     };
 
     enum {
@@ -122,7 +125,8 @@ public:
         SymbolMarginDefaultBackgroundColor,
         NumberMargin,
         TextMargin,
-        TextMarginRightJustified
+        TextMarginRightJustified,
+        SymbolMarginColor,
     };
 
     enum MarkerSymbol {
@@ -157,10 +161,16 @@ public:
         Bookmark
     };
 
+    enum TabDrawMode {
+        TabLongArrow,
+        TabStrikeOut,
+    };
+
     enum WhitespaceVisibility {
         WsInvisible,
         WsVisible,
-        WsVisibleAfterIndent
+        WsVisibleAfterIndent,
+        WsVisibleOnlyInIndent,
     };
 
     enum WrapMode {
@@ -209,6 +219,7 @@ public:
     bool backspaceUnindents() const;
     void beginUndoAction();
     BraceMatch braceMatching() const;
+    QByteArray bytes(int start, int end) const;
 
     CallTipsPosition callTipsPosition() const;
     CallTipsStyle callTipsStyle() const;
@@ -277,12 +288,14 @@ public:
     int length() const;
     QsciLexer *lexer() const;
 
+    QColor marginBackgroundColor(int margin) const;
     bool marginLineNumbers(int margin) const;
     int marginMarkerMask(int margin) const;
     int marginOptions() const;
     bool marginSensitivity(int margin) const;
     MarginType marginType(int margin) const;
     int marginWidth(int margin) const;
+    int margins() const;
 
     int markerDefine(MarkerSymbol sym, int markerNumber = -1);
     int markerDefine(char ch, int markerNumber = -1);
@@ -329,6 +342,8 @@ public:
 
     void setDocument(const QsciDocument &document);
 
+    void addEdgeColumn(int colnr, const QColor &col);
+    void clearEdgeColumns();
     void setEdgeColor(const QColor &col);
     void setEdgeColumn(int colnr);
     void setEdgeMode(EdgeMode mode);
@@ -350,6 +365,7 @@ public:
             int indicatorNumber = -1);
     void setIndicatorOutlineColor(const QColor &col, int indicatorNumber = -1);
 
+    void setMarginBackgroundColor(int margin, const QColor &col);
     void setMarginOptions(int options);
     void setMarginText(int line, const QString &text, int style);
     void setMarginText(int line, const QString &text, const QsciStyle &style);
@@ -357,6 +373,7 @@ public:
     void setMarginText(int line, const QList<QsciStyledText> &text);
     void setMarginType(int margin, MarginType type);
     void clearMarginText(int line = -1);
+    void setMargins(int margins);
 
     void setMarkerBackgroundColor(const QColor &col, int markerNumber = -1);
     void setMarkerForegroundColor(const QColor &col, int markerNumber = -1);
@@ -391,10 +408,14 @@ public:
     void showUserList(int id, const QStringList &list);
     QsciCommandSet *standardCommands() const;
 
+    void setTabDrawMode(TabDrawMode mode);
+    TabDrawMode tabDrawMode() const;
+
     bool tabIndents() const;
     int tabWidth() const;
     QString text() const;
     QString text(int line) const;
+    QString text(int start, int end) const;
     int textHeight(int linenr) const;
 
     int whitespaceSize() const;
@@ -506,6 +527,7 @@ signals:
     void linesChanged();
 
     void marginClicked(int margin, int line, Qt::KeyboardModifiers state);
+    void marginRightClicked(int margin, int line, Qt::KeyboardModifiers state);
 
     void modificationAttempted();
     void modificationChanged(bool m);

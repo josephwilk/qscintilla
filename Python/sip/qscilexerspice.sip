@@ -1,6 +1,6 @@
 // This is the SIP interface definition for QsciLexerSpice.
 //
-// Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2017 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -46,6 +46,8 @@ public:
     QColor defaultColor(int style) const;
     QFont defaultFont(int style) const;
     QString description(int style) const;
+
+    int braceStyle() const;
 
 private:
     QsciLexerSpice(const QsciLexerSpice &);

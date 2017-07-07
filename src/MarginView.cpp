@@ -25,6 +25,7 @@
 #include "Scintilla.h"
 
 #include "StringCopy.h"
+#include "Position.h"
 #include "SplitVector.h"
 #include "Partitioning.h"
 #include "RunStyles.h"
@@ -164,13 +165,13 @@ void MarginView::RefreshPixMaps(Surface *surfaceWindow, WindowID wid, const View
 			colourFMStripes = vsDraw.foldmarginHighlightColour;
 		}
 
-		pixmapSelPattern->FillAlphaRectangle(rcPattern, colourFMFill,vsDraw.alphaLevel);
-		pixmapSelPatternOffset1->FillAlphaRectangle(rcPattern, colourFMStripes,vsDraw.alphaLevel);
+		pixmapSelPattern->FillRectangle(rcPattern, colourFMFill);
+		pixmapSelPatternOffset1->FillRectangle(rcPattern, colourFMStripes);
 		for (int y = 0; y < patternSize; y++) {
 			for (int x = y % 2; x < patternSize; x += 2) {
 				PRectangle rcPixel = PRectangle::FromInts(x, y, x + 1, y + 1);
-				pixmapSelPattern->FillAlphaRectangle(rcPixel, colourFMStripes, vsDraw.alphaLevel);
-				pixmapSelPatternOffset1->FillAlphaRectangle(rcPixel, colourFMFill,vsDraw.alphaLevel);
+				pixmapSelPattern->FillRectangle(rcPixel, colourFMStripes);
+				pixmapSelPatternOffset1->FillRectangle(rcPixel, colourFMFill);
 			}
 		}
 	}
@@ -192,7 +193,7 @@ void MarginView::PaintMargin(Surface *surface, int topLine, PRectangle rc, PRect
 
 	Point ptOrigin = model.GetVisibleOriginInMain();
 	FontAlias fontLineNumber = vs.styles[STYLE_LINENUMBER].font;
-	for (int margin = 0; margin <= SC_MAX_MARGIN; margin++) {
+	for (size_t margin = 0; margin < vs.ms.size(); margin++) {
 		if (vs.ms[margin].width > 0) {
 
 			rcSelMargin.left = rcSelMargin.right;
@@ -215,14 +216,17 @@ void MarginView::PaintMargin(Surface *surface, int topLine, PRectangle rc, PRect
 					case SC_MARGIN_FORE:
 						colour = vs.styles[STYLE_DEFAULT].fore;
 						break;
+					case SC_MARGIN_COLOUR:
+						colour = vs.ms[margin].back;
+						break;
 					default:
 						colour = vs.styles[STYLE_LINENUMBER].back;
 						break;
 					}
-					surface->FillAlphaRectangle(rcSelMargin, colour,vs.alphaLevel);
+					surface->FillRectangle(rcSelMargin, colour);
 				}
 			} else {
-				surface->FillAlphaRectangle(rcSelMargin, vs.styles[STYLE_LINENUMBER].back, vs.alphaLevel);
+				surface->FillRectangle(rcSelMargin, vs.styles[STYLE_LINENUMBER].back);
 			}
 
 			const int lineStartPaint = static_cast<int>(rcMargin.top + ptOrigin.y) / vs.lineHeight;
@@ -242,7 +246,7 @@ void MarginView::PaintMargin(Surface *surface, int topLine, PRectangle rc, PRect
 						levelPrev = model.pdoc->GetLevel(lineBack);
 					}
 					if (!(levelPrev & SC_FOLDLEVELHEADERFLAG)) {
-						if ((level & SC_FOLDLEVELNUMBERMASK) < (levelPrev & SC_FOLDLEVELNUMBERMASK))
+						if (LevelNumber(level) < LevelNumber(levelPrev))
 							needWhiteClosure = true;
 					}
 				}
@@ -278,8 +282,8 @@ void MarginView::PaintMargin(Surface *surface, int topLine, PRectangle rc, PRect
 					// Decide which fold indicator should be displayed
 					const int level = model.pdoc->GetLevel(lineDoc);
 					const int levelNext = model.pdoc->GetLevel(lineDoc + 1);
-					const int levelNum = level & SC_FOLDLEVELNUMBERMASK;
-					const int levelNextNum = levelNext & SC_FOLDLEVELNUMBERMASK;
+					const int levelNum = LevelNumber(level);
+					const int levelNextNum = LevelNumber(levelNext);
 					if (level & SC_FOLDLEVELHEADERFLAG) {
 						if (firstSubLine) {
 							if (levelNum < levelNextNum) {
@@ -311,7 +315,7 @@ void MarginView::PaintMargin(Surface *surface, int topLine, PRectangle rc, PRect
 						needWhiteClosure = false;
 						const int firstFollowupLine = model.cs.DocFromDisplay(model.cs.DisplayFromDoc(lineDoc + 1));
 						const int firstFollowupLineLevel = model.pdoc->GetLevel(firstFollowupLine);
-						const int secondFollowupLineLevelNum = model.pdoc->GetLevel(firstFollowupLine + 1) & SC_FOLDLEVELNUMBERMASK;
+						const int secondFollowupLineLevelNum = LevelNumber(model.pdoc->GetLevel(firstFollowupLine + 1));
 						if (!model.cs.GetExpanded(lineDoc)) {
 							if ((firstFollowupLineLevel & SC_FOLDLEVELWHITEFLAG) &&
 								(levelNum > secondFollowupLineLevelNum))
@@ -379,7 +383,7 @@ void MarginView::PaintMargin(Surface *surface, int topLine, PRectangle rc, PRect
 								sprintf(number, "%c%c %03X %03X",
 									(lev & SC_FOLDLEVELHEADERFLAG) ? 'H' : '_',
 									(lev & SC_FOLDLEVELWHITEFLAG) ? 'W' : '_',
-									lev & SC_FOLDLEVELNUMBERMASK,
+									LevelNumber(lev),
 									lev >> 16
 									);
 							} else {
@@ -392,7 +396,7 @@ void MarginView::PaintMargin(Surface *surface, int topLine, PRectangle rc, PRect
 						XYPOSITION width = surface->WidthText(fontLineNumber, number, static_cast<int>(strlen(number)));
 						XYPOSITION xpos = rcNumber.right - width - vs.marginNumberPadding;
 						rcNumber.left = xpos;
-						DrawTextNoClipPhase(surface, rcNumber, vs.styles[STYLE_LINENUMBER],vs,
+						DrawTextNoClipPhase(surface, rcNumber, vs.styles[STYLE_LINENUMBER],
 							rcNumber.top + vs.maxAscent, number, static_cast<int>(strlen(number)), drawAll);
 					} else if (vs.wrapVisualFlags & SC_WRAPVISUALFLAG_MARGIN) {
 						PRectangle rcWrapMarker = rcMarker;
@@ -408,8 +412,8 @@ void MarginView::PaintMargin(Surface *surface, int topLine, PRectangle rc, PRect
 					const StyledText stMargin = model.pdoc->MarginStyledText(lineDoc);
 					if (stMargin.text && ValidStyledText(vs, vs.marginStyleOffset, stMargin)) {
 						if (firstSubLine) {
-							surface->FillAlphaRectangle(rcMarker,
-								vs.styles[stMargin.StyleAt(0) + vs.marginStyleOffset].back, vs.alphaLevel);
+							surface->FillRectangle(rcMarker,
+								vs.styles[stMargin.StyleAt(0) + vs.marginStyleOffset].back);
 							if (vs.ms[margin].style == SC_MARGIN_RTEXT) {
 								int width = WidestLineWidth(surface, vs, vs.marginStyleOffset, stMargin);
 								rcMarker.left = rcMarker.right - width - 3;
@@ -420,7 +424,7 @@ void MarginView::PaintMargin(Surface *surface, int topLine, PRectangle rc, PRect
 							// if we're displaying annotation lines, color the margin to match the associated document line
 							const int annotationLines = model.pdoc->AnnotationLines(lineDoc);
 							if (annotationLines && (visibleLine > lastVisibleLine - annotationLines)) {
-								surface->FillAlphaRectangle(rcMarker, vs.styles[stMargin.StyleAt(0) + vs.marginStyleOffset].back, vs.alphaLevel);
+								surface->FillRectangle(rcMarker, vs.styles[stMargin.StyleAt(0) + vs.marginStyleOffset].back);
 							}
 						}
 					}
@@ -461,7 +465,7 @@ void MarginView::PaintMargin(Surface *surface, int topLine, PRectangle rc, PRect
 
 	PRectangle rcBlankMargin = rcMargin;
 	rcBlankMargin.left = rcSelMargin.right;
-	surface->FillAlphaRectangle(rcBlankMargin, vs.styles[STYLE_DEFAULT].back, vs.alphaLevel);
+	surface->FillRectangle(rcBlankMargin, vs.styles[STYLE_DEFAULT].back);
 }
 
 #ifdef SCI_NAMESPACE

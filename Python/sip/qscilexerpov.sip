@@ -1,6 +1,6 @@
 // This is the SIP interface definition for QsciLexerPOV.
 //
-// Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2017 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -57,6 +57,8 @@ public:
     const char *keywords(int set) const;
     QString description(int style) const;
     const char *wordCharacters() const;
+
+    int braceStyle() const;
 
     void refreshProperties();
     bool foldComments() const;

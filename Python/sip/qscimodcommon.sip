@@ -1,7 +1,7 @@
 // This is the SIP interface definition for the parts of the Qsci module common
 // to the PyQt v4 and v5 versions.
 //
-// Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2017 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -20,7 +20,7 @@
 
 
 %Copying
-Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
+Copyright (c) 2017 Riverbank Computing Limited <info@riverbankcomputing.com>
 
 This file is part of QScintilla.
 
@@ -68,8 +68,10 @@ const char *QSCINTILLA_VERSION_STR;
 %Include qscilexeridl.sip
 %Include qscilexerjava.sip
 %Include qscilexerjavascript.sip
+%Include qscilexerjson.sip
 %Include qscilexerlua.sip
 %Include qscilexermakefile.sip
+%Include qscilexermarkdown.sip
 %Include qscilexermatlab.sip
 %Include qscilexeroctave.sip
 %Include qscilexerpascal.sip

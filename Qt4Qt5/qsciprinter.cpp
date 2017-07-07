@@ -1,6 +1,6 @@
 // This module implements the QsciPrinter class.
 //
-// Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2017 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -31,7 +31,7 @@
 
 // The ctor.
 QsciPrinter::QsciPrinter(QPrinter::PrinterMode mode)
-    : QPrinter(mode), mag(0), wrap(QsciScintilla::WrapWord), alphaLevel(0)
+    : QPrinter(mode), mag(0), wrap(QsciScintilla::WrapWord)
 {
 }
 
@@ -182,11 +182,5 @@ void QsciPrinter::setWrapMode(QsciScintilla::WrapMode wmode)
 {
     wrap = wmode;
 }
-
-void QsciPrinter::setAlphaLevel(int level)
-{
-    alphaLevel = level;
-}
-
 
 #endif

@@ -1,6 +1,6 @@
 // This is the SIP interface definition for QsciLexerCSS.
 //
-// Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2017 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -62,6 +62,8 @@ public:
     const char *keywords(int set) const;
     QString description(int style) const;
     const char *wordCharacters() const;
+
+    const char *blockEnd(int *style = 0) const /Encoding="None"/;
 
     void refreshProperties();
     bool foldComments() const;

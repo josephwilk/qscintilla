@@ -4,7 +4,7 @@
 TEMPLATE = lib
 TARGET = qscintillaplugin
 
-CONFIG += release plugin qscintilla2
+CONFIG += plugin qscintilla2
 
 greaterThan(QT_MAJOR_VERSION, 4) {
     QT += designer
@@ -16,7 +16,7 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 }
 
 macx {
-    QMAKE_POST_LINK = install_name_tool -change libqscintilla2.12.dylib $$[QT_INSTALL_LIBS]/libqscintilla2.12.dylib $(TARGET)
+    QMAKE_POST_LINK = install_name_tool -change libqscintilla2_qt$${QT_MAJOR_VERSION}.13.dylib $$[QT_INSTALL_LIBS]/libqscintilla2_qt$${QT_MAJOR_VERSION}.13.dylib $(TARGET)
 }
 
 HEADERS = qscintillaplugin.h

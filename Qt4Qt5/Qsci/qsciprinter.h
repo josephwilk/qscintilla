@@ -1,6 +1,6 @@
 // This module defines interface to the QsciPrinter class.
 //
-// Copyright (c) 2015 Riverbank Computing Limited <info@riverbankcomputing.com>
+// Copyright (c) 2017 Riverbank Computing Limited <info@riverbankcomputing.com>
 // 
 // This file is part of QScintilla.
 // 
@@ -20,10 +20,6 @@
 
 #ifndef QSCIPRINTER_H
 #define QSCIPRINTER_H
-
-#ifdef __APPLE__
-extern "C++" {
-#endif
 
 // This is needed for Qt v5.0.0-alpha.
 #if defined(B0)
@@ -103,21 +99,14 @@ public:
     //! \sa wrapMode()
     virtual void setWrapMode(QsciScintilla::WrapMode wmode);
 
-    virtual void setAlphaLevel(int level);
-
 private:
     int mag;
-    int alphaLevel;
     QsciScintilla::WrapMode wrap;
 
     QsciPrinter(const QsciPrinter &);
     QsciPrinter &operator=(const QsciPrinter &);
 };
 
-#endif
-
-#ifdef __APPLE__
-}
 #endif
 
 #endif
