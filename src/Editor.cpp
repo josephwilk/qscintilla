@@ -1730,14 +1730,14 @@ void Editor::Paint(Surface *surfaceWindow, PRectangle rcArea) {
 			PRectangle rcRightMargin = rcClient;
 			rcRightMargin.left = rcRightMargin.right - vs.rightMarginWidth;
 			if (rcArea.Intersects(rcRightMargin)) {
-				surfaceWindow->FillRectangle(rcRightMargin, vs.styles[STYLE_DEFAULT].back);
+				surfaceWindow->FillAlphaRectangle(rcRightMargin, vs.styles[STYLE_DEFAULT].back, vs.alphaLevel);
 			}
 		} else { // Else separate view so separate paint event but leftMargin included to allow overlap
 			PRectangle rcLeftMargin = rcArea;
 			rcLeftMargin.left = 0;
 			rcLeftMargin.right = rcLeftMargin.left + vs.leftMarginWidth;
 			if (rcArea.Intersects(rcLeftMargin)) {
-				surfaceWindow->FillRectangle(rcLeftMargin, vs.styles[STYLE_DEFAULT].back);
+				surfaceWindow->FillAlphaRectangle(rcLeftMargin, vs.styles[STYLE_DEFAULT].back, vs.alphaLevel);
 			}
 		}
 	}
@@ -5772,6 +5772,13 @@ sptr_t Editor::WndProc(unsigned int iMessage, uptr_t wParam, sptr_t lParam) {
 			ptr[iChar] = '\0';
 			return iChar;
 		}
+		
+    case SCI_ALPHALEVEL:{
+		view.printParameters.alphaLevel = static_cast<int>(wParam);
+
+		vs.alphaLevel = static_cast<int>(wParam);
+		return vs.alphaLevel;
+	}
 
 	case SCI_SETTEXT: {
 			if (lParam == 0)

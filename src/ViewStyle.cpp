@@ -181,6 +181,7 @@ ViewStyle::ViewStyle(const ViewStyle &source) {
 	wrapVisualFlagsLocation = source.wrapVisualFlagsLocation;
 	wrapVisualStartIndent = source.wrapVisualStartIndent;
 	wrapIndentMode = source.wrapIndentMode;
+	alphaLevel = source.alphaLevel;
 }
 
 ViewStyle::~ViewStyle() {

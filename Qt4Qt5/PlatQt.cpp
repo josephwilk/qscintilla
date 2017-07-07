@@ -186,6 +186,8 @@ public:
             ColourDesired back);
     void FillRectangle(PRectangle rc, ColourDesired back);
     void FillRectangle(PRectangle rc, Surface &surfacePattern);
+	void FillAlphaRectangle(PRectangle rc, ColourDesired back, int alpha);
+	void FillRealRectangle(PRectangle rc, ColourDesired back);
     void RoundedRectangle(PRectangle rc, ColourDesired fore,
             ColourDesired back);
     void AlphaRectangle(PRectangle rc, int cornerSize, ColourDesired fill,
@@ -219,6 +221,7 @@ public:
     void SetDBCSMode(int codePage) {}
 
     void DrawXPM(PRectangle rc, const XPM *xpm);
+	void setAlphaLevel(int level);
 
 private:
     void drawRect(const PRectangle &rc);
@@ -235,6 +238,7 @@ private:
     QPainter *painter;
     bool my_resources;
     int pen_x, pen_y;
+	int alphaLevel = 0;
 };
 
 Surface *Surface::Allocate(int)
@@ -279,6 +283,10 @@ void SurfaceImpl::Init(QPainter *p)
 
     pd = p->device();
     painter = p;
+}
+
+void SurfaceImpl::setAlphaLevel(int level){
+    alphaLevel = level;
 }
 
 void SurfaceImpl::InitPixMap(int width, int height, Surface *, WindowID wid)
@@ -367,13 +375,44 @@ void SurfaceImpl::RectangleDraw(PRectangle rc, ColourDesired fore,
     drawRect(rc);
 }
 
-void SurfaceImpl::FillRectangle(PRectangle rc, ColourDesired back)
+void SurfaceImpl::FillAlphaRectangle(PRectangle rc, ColourDesired back, int alpha)
 {
     Q_ASSERT(painter);
+    QColor c = convertQColor(back, alpha);
+    painter->setPen(Qt::transparent);
+    painter->setBrush(c);
 
-    painter->setPen(Qt::NoPen);
-    painter->setBrush(convertQColor(back));
+    painter->setCompositionMode( QPainter::CompositionMode_Clear );
+    painter->fillRect(QRectF(rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top), Qt::transparent);
+    painter->setCompositionMode( QPainter::CompositionMode_SourceOver );
     drawRect(rc);
+}
+
+void SurfaceImpl::FillRealRectangle(PRectangle rc, ColourDesired back){
+  Q_ASSERT(painter);
+
+  painter->setPen(Qt::NoPen);
+  painter->setBrush(convertQColor(back));
+
+  painter->setCompositionMode( QPainter::CompositionMode_Clear );
+  painter->fillRect(QRectF(rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top), Qt::transparent);
+  painter->setCompositionMode( QPainter::CompositionMode_SourceOver );
+  drawRect(rc);
+}
+
+void SurfaceImpl::FillRectangle(PRectangle rc, ColourDesired back)
+{
+    Q_ASSERT(painter);    
+   int alphaLevel = 30;
+   QColor c = convertQColor(back, alphaLevel);
+   painter->setPen(Qt::transparent);
+   painter->setBrush(c);
+   	
+   painter->setCompositionMode( QPainter::CompositionMode_Clear );
+   painter->fillRect(QRectF(rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top), Qt::transparent);
+   painter->setCompositionMode( QPainter::CompositionMode_SourceOver );
+   	
+   drawRect(rc);
 }
 
 void SurfaceImpl::FillRectangle(PRectangle rc, Surface &surfacePattern)

@@ -1247,6 +1247,11 @@ void QsciScintilla::setWrapMode(WrapMode mode)
     SendScintilla(SCI_SETWRAPMODE, mode);
 }
 
+// Set the alpha level.
+void QsciScintilla::setAlphaLevel(int level)
+{
+	SendScintilla(SCI_ALPHALEVEL, level);
+}
 
 // Return the line wrap indent mode.
 QsciScintilla::WrapIndentMode QsciScintilla::wrapIndentMode() const

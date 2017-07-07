@@ -327,6 +327,8 @@ public:
 	virtual void RectangleDraw(PRectangle rc, ColourDesired fore, ColourDesired back)=0;
 	virtual void FillRectangle(PRectangle rc, ColourDesired back)=0;
 	virtual void FillRectangle(PRectangle rc, Surface &surfacePattern)=0;
+	virtual void FillAlphaRectangle(PRectangle rc, ColourDesired back, int alpha)=0;
+    virtual void FillRealRectangle(PRectangle rc, ColourDesired back)=0;
 	virtual void RoundedRectangle(PRectangle rc, ColourDesired fore, ColourDesired back)=0;
 	virtual void AlphaRectangle(PRectangle rc, int cornerSize, ColourDesired fill, int alphaFill,
 		ColourDesired outline, int alphaOutline, int flags)=0;
@@ -352,6 +354,8 @@ public:
 
 	virtual void SetUnicodeMode(bool unicodeMode_)=0;
 	virtual void SetDBCSMode(int codePage)=0;
+
+	 virtual void setAlphaLevel(int level)=0;
 
 #if defined(PLAT_QT)
     virtual void Init(QPainter *p)=0;
