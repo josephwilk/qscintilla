@@ -2097,14 +2097,14 @@ void EditView::FillLineRemainder(Surface *surface, const EditModel &model, const
 		ColourOptional background = vsDraw.Background(model.pdoc->GetMark(line), model.caret.active, ll->containsCaret);
 
 		if (eolInSelection && vsDraw.selEOLFilled && vsDraw.selColours.back.isSet && (line < model.pdoc->LinesTotal() - 1) && (alpha == SC_ALPHA_NOALPHA)) {
-			surface->FillRectangle(rcArea, SelectionBackground(vsDraw, eolInSelection == 1, model.primarySelection));
+			surface->FillAlphaRectangle(rcArea, SelectionBackground(vsDraw, eolInSelection == 1, model.primarySelection), vsDraw.alphaLevel);
 		} else {
 			if (background.isSet) {
-				surface->FillRectangle(rcArea, background);
+				surface->FillAlphaRectangle(rcArea, background, vsDraw.alphaLevel);
 			} else if (vsDraw.styles[ll->styles[ll->numCharsInLine]].eolFilled) {
-				surface->FillRectangle(rcArea, vsDraw.styles[ll->styles[ll->numCharsInLine]].back);
+				surface->FillAlphaRectangle(rcArea, vsDraw.styles[ll->styles[ll->numCharsInLine]].back, vsDraw.alphaLevel);
 			} else {
-				surface->FillRectangle(rcArea, vsDraw.styles[STYLE_DEFAULT].back);
+				surface->FillAlphaRectangle(rcArea, vsDraw.styles[STYLE_DEFAULT].back, vsDraw.alphaLevel);
 			}
 			if (eolInSelection && vsDraw.selEOLFilled && vsDraw.selColours.back.isSet && (line < model.pdoc->LinesTotal() - 1) && (alpha != SC_ALPHA_NOALPHA)) {
 				SimpleAlphaRectangle(surface, rcArea, SelectionBackground(vsDraw, eolInSelection == 1, model.primarySelection), alpha);
